@@ -5,6 +5,7 @@ import { Package } from '../types.ts';
 const HomePage: React.FC = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
+  const [processingId, setProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -25,39 +26,39 @@ const HomePage: React.FC = () => {
   }, []);
 
   const handleBuyNow = async (pkg: Package) => {
+    setProcessingId(pkg.id);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        alert("Please login to purchase a package.");
+        return;
+      }
 
-      console.log('Redirecting to Stripe for:', pkg.title);
-      
-      const { data: purchaseData, error: purchaseError } = await supabase
+      // 1. Log the purchase intent in the database as 'pending'
+      // This allows the user to see their "History" even if they don't complete checkout
+      const { error: purchaseError } = await supabase
         .from('purchases')
         .insert({
           user_id: user.id,
           package_id: pkg.id,
-          stripe_checkout_session_id: `sim_sess_${Date.now()}`,
           status: 'pending'
-        })
-        .select()
-        .single();
+        });
 
       if (purchaseError) throw purchaseError;
-      
-      alert(`Simulating Stripe Checkout for ${pkg.title}...`);
-      
-      setTimeout(async () => {
-        await supabase
-          .from('purchases')
-          .update({ status: 'completed', stripe_payment_intent_id: `pi_sim_${Date.now()}` })
-          .eq('id', purchaseData.id);
-        
-        window.location.hash = '#/success';
-      }, 1500);
 
-    } catch (err) {
-      console.error('Purchase failed:', err);
-      alert('Failed to initiate purchase. Please try again.');
+      // 2. Redirect the user directly to the Stripe Payment Link
+      // We append client_reference_id and prefilled_email for better tracking in Stripe
+      const stripeUrl = new URL(pkg.stripe_payment_link);
+      stripeUrl.searchParams.set('client_reference_id', user.id);
+      stripeUrl.searchParams.set('prefilled_email', user.email || '');
+
+      window.location.href = stripeUrl.toString();
+
+    } catch (err: any) {
+      console.error('Redirection failed:', err);
+      alert(`Could not open payment link: ${err.message || 'Unknown error'}`);
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -105,9 +106,15 @@ const HomePage: React.FC = () => {
               </div>
               <button
                 onClick={() => handleBuyNow(pkg)}
-                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors focus:ring-4 focus:ring-indigo-100"
+                disabled={processingId === pkg.id}
+                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors focus:ring-4 focus:ring-indigo-100 disabled:opacity-50 flex justify-center items-center"
               >
-                Buy Now
+                {processingId === pkg.id ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    Redirecting to Payment...
+                  </>
+                ) : 'Buy Now'}
               </button>
             </div>
           </div>

@@ -1,0 +1,5 @@
+{
+  "name": "B2B Package Hub",
+  "description": "A minimal B2B platform for purchasing business service packages, featuring Supabase authentication and Stripe integration.",
+  "requestFramePermissions": []
+}

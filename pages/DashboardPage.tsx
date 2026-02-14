@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabase';
-import { Purchase } from '../types';
+import { supabase } from '../supabase.ts';
+import { Purchase } from '../types.ts';
 
 const DashboardPage: React.FC = () => {
   const [purchasedPackages, setPurchasedPackages] = useState<Purchase[]>([]);

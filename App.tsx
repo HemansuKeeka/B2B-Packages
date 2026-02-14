@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { supabase } from './supabase';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import HomePage from './pages/HomePage';
-import DashboardPage from './pages/DashboardPage';
-import HistoryPage from './pages/HistoryPage';
-import SuccessPage from './pages/SuccessPage';
-import Navigation from './components/Navigation';
+import { supabase } from './supabase.ts';
+import LoginPage from './pages/LoginPage.tsx';
+import RegisterPage from './pages/RegisterPage.tsx';
+import HomePage from './pages/HomePage.tsx';
+import DashboardPage from './pages/DashboardPage.tsx';
+import HistoryPage from './pages/HistoryPage.tsx';
+import SuccessPage from './pages/SuccessPage.tsx';
+import Navigation from './components/Navigation.tsx';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);

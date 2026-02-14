@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabase';
-import { Package } from '../types';
+import { supabase } from '../supabase.ts';
+import { Package } from '../types.ts';
 
 const HomePage: React.FC = () => {
   const [packages, setPackages] = useState<Package[]>([]);
@@ -27,32 +26,23 @@ const HomePage: React.FC = () => {
 
   const handleBuyNow = async (pkg: Package) => {
     try {
-      // In a real app, this would call your backend (e.g. Supabase Edge Function or Netlify/Vercel API)
-      // to create a Stripe Checkout Session.
-      // For this MVP, we simulate the flow.
-      
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
       console.log('Redirecting to Stripe for:', pkg.title);
       
-      // Step 1: Create a pending purchase record locally for tracking
       const { data: purchaseData, error: purchaseError } = await supabase
         .from('purchases')
         .insert({
           user_id: user.id,
           package_id: pkg.id,
-          stripe_checkout_session_id: `sim_sess_${Date.now()}`, // Simulated ID
+          stripe_checkout_session_id: `sim_sess_${Date.now()}`,
           status: 'pending'
         })
         .select()
         .single();
 
       if (purchaseError) throw purchaseError;
-
-      // Step 2: In reality, you'd get a URL from the Stripe API and redirect.
-      // Here we simulate a successful checkout by immediately "completing" the purchase 
-      // after a small delay to simulate the webhook (since we don't have a real backend to listen to real events).
       
       alert(`Simulating Stripe Checkout for ${pkg.title}...`);
       

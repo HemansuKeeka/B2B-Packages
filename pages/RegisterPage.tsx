@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabase';
+import { supabase } from '../supabase.ts';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +28,6 @@ const RegisterPage: React.FC = () => {
     setError(null);
 
     try {
-      // 1. Sign up user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -42,7 +40,6 @@ const RegisterPage: React.FC = () => {
       }
 
       if (authData.user) {
-        // 2. Insert into profiles table
         const { error: profileError } = await supabase.from('profiles').insert({
           id: authData.user.id,
           full_name: formData.fullName,
@@ -74,9 +71,8 @@ const RegisterPage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Left Side: Form */}
       <div className="flex flex-1 flex-col justify-center px-8 py-12 lg:px-16 xl:px-24">
-        <div className="mx-auto w-full max-w-md">
+        <div className="mx-auto w-full max-md">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">Create your business account</h2>
           <p className="mt-2 text-sm text-gray-600">Join our network of thriving businesses.</p>
 
@@ -144,31 +140,18 @@ const RegisterPage: React.FC = () => {
 
           <p className="mt-8 text-center text-sm text-gray-500">
             Already have an account?{' '}
-            <Link to="/" className="font-semibold text-indigo-600 hover:text-indigo-500">
-              Login
-            </Link>
+            <Link to="/" className="font-semibold text-indigo-600 hover:text-indigo-500">Login</Link>
           </p>
         </div>
       </div>
-
-      {/* Right Side: Hero */}
       <div className="relative hidden w-0 flex-1 lg:block">
         <div className="absolute inset-0 bg-indigo-600 flex flex-col justify-center px-12 text-white">
           <h1 className="text-4xl font-extrabold tracking-tight mb-4">B2B Package Hub</h1>
           <p className="text-xl mb-8">Streamline your business growth with our curated service packages.</p>
           <ul className="space-y-4 text-lg">
-            <li className="flex items-start">
-              <span className="mr-3 text-indigo-200">✓</span>
-              Premium curated business services
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-indigo-200">✓</span>
-              Seamless Stripe checkout integration
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-indigo-200">✓</span>
-              Centralized dashboard for all purchases
-            </li>
+            <li className="flex items-start"><span className="mr-3 text-indigo-200">✓</span> Premium curated business services</li>
+            <li className="flex items-start"><span className="mr-3 text-indigo-200">✓</span> Seamless Stripe checkout integration</li>
+            <li className="flex items-start"><span className="mr-3 text-indigo-200">✓</span> Centralized dashboard for all purchases</li>
           </ul>
         </div>
       </div>

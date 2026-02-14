@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabase';
+import { supabase } from '../supabase.ts';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -35,13 +34,10 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Left Side: Form */}
       <div className="flex flex-1 flex-col justify-center px-8 py-12 lg:px-16 xl:px-24">
         <div className="mx-auto w-full max-w-sm">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Welcome back to B2B Package Hub.
-          </p>
+          <p className="mt-2 text-sm text-gray-600">Welcome back to B2B Package Hub.</p>
 
           <form className="mt-10 space-y-6" onSubmit={handleLogin}>
             {error && (
@@ -50,9 +46,7 @@ const LoginPage: React.FC = () => {
               </div>
             )}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                Email address
-              </label>
+              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">Email address</label>
               <div className="mt-2">
                 <input
                   id="email"
@@ -61,15 +55,13 @@ const LoginPage: React.FC = () => {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2 border"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Password
-              </label>
+              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">Password</label>
               <div className="mt-2">
                 <input
                   id="password"
@@ -78,7 +70,7 @@ const LoginPage: React.FC = () => {
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2 border"
                 />
               </div>
             </div>
@@ -96,31 +88,18 @@ const LoginPage: React.FC = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Don't have an account?{' '}
-            <Link to="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-              Register
-            </Link>
+            <Link to="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Register</Link>
           </p>
         </div>
       </div>
-
-      {/* Right Side: Hero */}
       <div className="relative hidden w-0 flex-1 lg:block">
         <div className="absolute inset-0 bg-indigo-600 flex flex-col justify-center px-12 text-white">
           <h1 className="text-4xl font-extrabold tracking-tight mb-4">B2B Package Hub</h1>
           <p className="text-xl mb-8">Streamline your business growth with our curated service packages.</p>
           <ul className="space-y-4 text-lg">
-            <li className="flex items-start">
-              <span className="mr-3 text-indigo-200">✓</span>
-              Premium curated business services
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-indigo-200">✓</span>
-              Seamless Stripe checkout integration
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-indigo-200">✓</span>
-              Centralized dashboard for all purchases
-            </li>
+            <li className="flex items-start"><span className="mr-3 text-indigo-200">✓</span> Premium curated business services</li>
+            <li className="flex items-start"><span className="mr-3 text-indigo-200">✓</span> Seamless Stripe checkout integration</li>
+            <li className="flex items-start"><span className="mr-3 text-indigo-200">✓</span> Centralized dashboard for all purchases</li>
           </ul>
         </div>
       </div>
